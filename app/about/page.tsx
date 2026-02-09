@@ -38,7 +38,7 @@ export default function About() {
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            className="sticky top-24"
+                            className="md:sticky md:top-24"
                         >
                             <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl relative">
                                 <div
