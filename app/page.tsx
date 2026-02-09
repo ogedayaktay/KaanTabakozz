@@ -406,7 +406,7 @@ export default function Home() {
               Online Randevu Al
             </Link>
             <Link
-              href="tel:+905535530000"
+              href="tel:+905335530000"
               className="bg-transparent border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-full font-bold text-lg transition-all hover:-translate-y-1"
             >
               Hemen Ara
