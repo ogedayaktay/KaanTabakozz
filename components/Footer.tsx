@@ -91,10 +91,10 @@ export default function Footer() {
                             <li className="flex items-center gap-3">
                                 <Mail className="text-secondary shrink-0" size={18} />
                                 <a
-                                    href="mailto:info@klinikpsikologkaantabakoz.com"
+                                    href="mailto:psk.kaantabakoz@gmail.com"
                                     className="text-gray-300 hover:text-secondary transition-colors"
                                 >
-                                    info@klinikpsikologkaantabakoz.com
+                                    psk.kaantabakoz@gmail.com
                                 </a>
                             </li>
                         </ul>

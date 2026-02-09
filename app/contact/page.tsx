@@ -14,6 +14,8 @@ export default function Contact() {
         kvkk: false
     });
 
+    const [submitted, setSubmitted] = useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -23,16 +25,25 @@ export default function Contact() {
         setFormData(prev => ({ ...prev, kvkk: e.target.checked }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const text = `Merhaba, web sitenizden ulaşıyorum.\n\nİsim: ${formData.name}\nTelefon: ${formData.phone}\nE-posta: ${formData.email}\nMesaj: ${formData.message}`;
-        const encodedText = encodeURIComponent(text);
-        const waUrl = `https://wa.me/905335530000?text=${encodedText}`;
+        try {
+            const myForm = e.target as HTMLFormElement;
+            const formData = new FormData(myForm);
 
-        window.open(waUrl, '_blank');
+            await fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData as any).toString(),
+            });
 
-        setFormData({ name: "", phone: "", email: "", message: "", kvkk: false });
+            setSubmitted(true);
+            setFormData({ name: "", phone: "", email: "", message: "", kvkk: false });
+        } catch (error) {
+            console.error("Form submission error:", error);
+            alert("Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
+        }
     };
 
     return (
@@ -111,8 +122,8 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-primary mb-1">E-posta</h3>
-                                        <a href="mailto:info@klinikpsikologkaantabakoz.com" className="text-gray-600 hover:text-secondary transition-colors">
-                                            info@klinikpsikologkaantabakoz.com
+                                        <a href="mailto:psk.kaantabakoz@gmail.com" className="text-gray-600 hover:text-secondary transition-colors">
+                                            psk.kaantabakoz@gmail.com
                                         </a>
                                     </div>
                                 </div>
@@ -140,88 +151,113 @@ export default function Contact() {
                             className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100"
                         >
                             <h2 className="font-serif text-2xl font-bold text-primary mb-6">Bize Ulaşın</h2>
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label htmlFor="name" className="text-sm font-medium text-gray-700">İsim Soyisim</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="Adınız"
-                                        />
+
+                            {submitted ? (
+                                <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-xl flex flex-col items-center text-center space-y-3">
+                                    <div className="bg-green-100 p-3 rounded-full">
+                                        <Send size={32} className="text-green-600" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <label htmlFor="phone" className="text-sm font-medium text-gray-700">Telefon</label>
-                                        <input
-                                            type="tel"
-                                            id="phone"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="05XX XXX XX XX"
-                                        />
-                                    </div>
+                                    <h3 className="text-xl font-bold">Mesajınız Gönderildi!</h3>
+                                    <p>En kısa sürede size dönüş yapacağım.</p>
+                                    <button
+                                        onClick={() => setSubmitted(false)}
+                                        className="text-sm underline mt-4 hover:text-green-800"
+                                    >
+                                        Yeni mesaj gönder
+                                    </button>
                                 </div>
-
-                                <div className="space-y-2">
-                                    <label htmlFor="email" className="text-sm font-medium text-gray-700">E-posta</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                        placeholder="ornek@email.com"
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label htmlFor="message" className="text-sm font-medium text-gray-700">Mesajınız</label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        required
-                                        rows={5}
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
-                                        placeholder="Randevu talebi veya sorunuz..."
-                                    />
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <input
-                                        type="checkbox"
-                                        id="kvkk"
-                                        name="kvkk"
-                                        checked={formData.kvkk}
-                                        onChange={handleCheckboxChange}
-                                        required
-                                        className="mt-1 h-4 w-4 text-secondary rounded border-gray-300 focus:ring-secondary"
-                                    />
-                                    <label htmlFor="kvkk" className="text-xs text-gray-500">
-                                        <Link href="/privacy" className="text-primary hover:underline">KVKK Aydınlatma Metni</Link>'ni okudum ve kişisel verilerimin işlenmesini onaylıyorum.
-                                    </label>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={!formData.kvkk}
-                                    className="w-full bg-secondary text-primary hover:bg-primary hover:text-white py-4 rounded-xl font-bold text-lg transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            ) : (
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="space-y-6"
+                                    name="contact"
+                                    method="POST"
+                                    data-netlify="true"
                                 >
-                                    <Send size={18} />
-                                    Gönder
-                                </button>
-                            </form>
+                                    <input type="hidden" name="form-name" value="contact" />
+
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label htmlFor="name" className="text-sm font-medium text-gray-700">İsim Soyisim</label>
+                                            <input
+                                                type="text"
+                                                id="name"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                                placeholder="Adınız"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="phone" className="text-sm font-medium text-gray-700">Telefon</label>
+                                            <input
+                                                type="tel"
+                                                id="phone"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                                placeholder="05XX XXX XX XX"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label htmlFor="email" className="text-sm font-medium text-gray-700">E-posta</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            placeholder="ornek@email.com"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label htmlFor="message" className="text-sm font-medium text-gray-700">Mesajınız</label>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            required
+                                            rows={5}
+                                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
+                                            placeholder="Randevu talebi veya sorunuz..."
+                                        />
+                                    </div>
+
+                                    <div className="flex items-start gap-3">
+                                        <input
+                                            type="checkbox"
+                                            id="kvkk"
+                                            name="kvkk"
+                                            checked={formData.kvkk}
+                                            onChange={handleCheckboxChange}
+                                            required
+                                            className="mt-1 h-4 w-4 text-secondary rounded border-gray-300 focus:ring-secondary"
+                                        />
+                                        <label htmlFor="kvkk" className="text-xs text-gray-500">
+                                            <Link href="/privacy" className="text-primary hover:underline">KVKK Aydınlatma Metni</Link>'ni okudum ve kişisel verilerimin işlenmesini onaylıyorum.
+                                        </label>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={!formData.kvkk}
+                                        className="w-full bg-secondary text-primary hover:bg-primary hover:text-white py-4 rounded-xl font-bold text-lg transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                    >
+                                        <Send size={18} />
+                                        Gönder
+                                    </button>
+                                </form>
+                            )}
                         </motion.div>
                     </div>
                 </div>
