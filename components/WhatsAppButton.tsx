@@ -21,7 +21,7 @@ export default function WhatsAppButton() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const phoneNumber = "905535530000";
+    const phoneNumber = "905335530000";
     const message = "Merhaba Kaan Bey, Lüleburgaz kliniğiniz için randevu almak istiyorum.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message
