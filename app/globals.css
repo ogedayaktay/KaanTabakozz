@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+
+  --color-primary: #1A2F38;
+  --color-secondary: #D4AF37;
+  --color-accent: #7E99A3;
+  --color-background: #F9F9F7;
+  --color-foreground: #1A2F38;
+
+  --color-muted: #7E99A3;
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
